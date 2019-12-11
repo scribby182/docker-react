@@ -1,0 +1,16 @@
+sudo: required
+services:
+  - docker
+
+# tag the image so that we can refer to it later in script.  Otherwise we'd need to capture the ID
+before_install:
+  - docker build -t myImageTag -f Dockerfile.dev .
+
+# Previous way...
+# # -- --coverage makes the npm run test not be a persistent, never ending command
+# script:
+#   - docker run -t myImageTag npm run test -- --coverage
+
+# -e CI=true is to avoid npm run tet being a persistent, never ending command
+script:
+  - docker run -e CI=true myImageTag npm run test
