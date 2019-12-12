@@ -15,3 +15,20 @@ before_install:
 # -e CI=true is to avoid npm run tet being a persistent, never ending command
 script:
   - docker run -e CI=true myimagetag npm run test
+
+deploy:
+  provider: elasticbeanstalk
+  # next three things come from the elastic beanstalk page
+  region: "us-east-2"
+  app: "docker-react"
+  env: "DockerReact-env"
+  # bucket is auto generated.  Find it from buckets (S3) on AWS
+  bucket_name: "elasticbeanstalk-us-east-2-568517053286"
+  # use my app name.  This will be created if it does not exist as is.  This space will get used by anything in this elastic beanstalk, so careful!
+  bucket_path: "docker-react"
+  on:
+    branch: master
+  # Get these from AWS IAM service.  IAM->users->create->... (programmatic access only).  Access using "Attach existing policies directly", then AWSElasticBeanstalkFullAccess
+  # Put them into travis as environment variables (settings of the repo, env variables)
+  access_key_id: "$AWS_ACCESS_KEY"
+  secret_access_key: "$AWS_SECRET_KEY"
